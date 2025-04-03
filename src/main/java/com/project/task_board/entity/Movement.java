@@ -1,9 +1,14 @@
 package com.project.task_board.entity;
 
+import com.project.task_board.utils.ColumnType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import java.time.LocalDateTime;
 
 @Entity
@@ -13,10 +18,18 @@ public class Movement {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @ManyToOne
+  @JoinColumn(name = "card_id", nullable = false)
+  private Card card;
+
   private LocalDateTime dataHoraEntrada;
   private LocalDateTime dataHoraSaida;
-  private Column colunaAnterior;
-  private Column colunaAtual;
+
+  @Enumerated(EnumType.STRING)
+  private ColumnType colunaAnterior;
+
+  @Enumerated(EnumType.STRING)
+  private ColumnType colunaAtual;
 
   public Movement() {
   }
@@ -45,19 +58,27 @@ public class Movement {
     this.dataHoraSaida = dataHoraSaida;
   }
 
-  public Column getColunaAnterior() {
+  public ColumnType getColunaAnterior() {
     return colunaAnterior;
   }
 
-  public void setColunaAnterior(Column colunaAnterior) {
+  public void setColunaAnterior(ColumnType colunaAnterior) {
     this.colunaAnterior = colunaAnterior;
   }
 
-  public Column getColunaAtual() {
+  public ColumnType getColunaAtual() {
     return colunaAtual;
   }
 
-  public void setColunaAtual(Column colunaAtual) {
+  public void setColunaAtual(ColumnType colunaAtual) {
     this.colunaAtual = colunaAtual;
+  }
+
+  public Card getCard() {
+    return card;
+  }
+
+  public void setCard(Card card) {
+    this.card = card;
   }
 }

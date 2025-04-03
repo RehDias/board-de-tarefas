@@ -1,9 +1,16 @@
 package com.project.task_board.entity;
 
+import com.project.task_board.utils.ColumnType;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import java.util.List;
 
 @Entity
@@ -12,15 +19,23 @@ public class Column {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  private String nome;
-  private String tipo;
-  private int ordem;
+  @Enumerated(EnumType.STRING)
+  private ColumnType tipo;
+
+  @OneToMany(mappedBy = "column", cascade = CascadeType.ALL)
   private List<Card> cards;
+
+  @ManyToOne
+  @JoinColumn(name = "board_id", nullable = false)
+  private Board board;
+
+  private String nome;
+  private int ordem;
 
   public Column() {
   }
 
-  public Column(String nome, String tipo, int ordem) {
+  public Column(String nome, ColumnType tipo, int ordem) {
     this.nome = nome;
     this.tipo = tipo;
     this.ordem = ordem;
@@ -42,11 +57,11 @@ public class Column {
     this.nome = nome;
   }
 
-  public String getTipo() {
+  public ColumnType getTipo() {
     return tipo;
   }
 
-  public void setTipo(String tipo) {
+  public void setTipo(ColumnType tipo) {
     this.tipo = tipo;
   }
 
@@ -64,5 +79,13 @@ public class Column {
 
   public void setCards(List<Card> cards) {
     this.cards = cards;
+  }
+
+  public Board getBoard() {
+    return board;
+  }
+
+  public void setBoard(Board board) {
+    this.board = board;
   }
 }

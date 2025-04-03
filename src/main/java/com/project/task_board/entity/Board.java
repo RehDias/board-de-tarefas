@@ -1,9 +1,11 @@
 package com.project.task_board.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import java.util.List;
 
 @Entity
@@ -12,15 +14,21 @@ public class Board {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  private String nome;
+  @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
   private List<Column> colunas;
+
+  @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+  private List<Report> reports;
+
+  private String nome;
 
   public Board() {
   }
 
-  public Board(String nome, List<Column> colunas) {
+  public Board(String nome, List<Column> colunas, List<Report> reports) {
     this.nome = nome;
     this.colunas = colunas;
+    this.reports = reports;
   }
 
   public Long getId() {
@@ -45,5 +53,13 @@ public class Board {
 
   public void setColunas(List<Column> colunas) {
     this.colunas = colunas;
+  }
+
+  public List<Report> getReports() {
+    return reports;
+  }
+
+  public void setReports(List<Report> reports) {
+    this.reports = reports;
   }
 }

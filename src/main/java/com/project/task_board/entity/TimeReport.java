@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class TimeReport {
@@ -11,6 +13,10 @@ public class TimeReport {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+
+  @ManyToOne
+  @JoinColumn(name = "report_id", nullable = false)
+  private Report report;
 
   private Card card;
   private Column colunaInicial;
@@ -58,5 +64,13 @@ public class TimeReport {
 
   public void setTempoTotal(Long tempoTotal) {
     this.tempoTotal = tempoTotal;
+  }
+
+  public Report getReport() {
+    return report;
+  }
+
+  public void setReport(Report report) {
+    this.report = report;
   }
 }

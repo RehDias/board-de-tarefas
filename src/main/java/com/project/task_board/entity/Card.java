@@ -1,9 +1,13 @@
 package com.project.task_board.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -14,6 +18,13 @@ public class Card {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @ManyToOne
+  @JoinColumn(name = "column_id", nullable = false)
+  private Column column;
+
+  @OneToMany(mappedBy = "card", cascade = CascadeType.ALL)
+  private List<Movement> movimentacao;
+
   private String titulo;
   private String descricao;
   private LocalDate dataCriacao;
@@ -22,7 +33,6 @@ public class Card {
   private LocalDate dataBloqueio;
   private LocalDate dataDesbloqueio;
   private String motivoDesbloqueio;
-  private List<Movement> movimentacao;
 
   public Card() {
   }
@@ -110,5 +120,13 @@ public class Card {
 
   public void setMovimentacao(List<Movement> movimentacao) {
     this.movimentacao = movimentacao;
+  }
+
+  public Column getColumn() {
+    return column;
+  }
+
+  public void setColumn(Column column) {
+    this.column = column;
   }
 }

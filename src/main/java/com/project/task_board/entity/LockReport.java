@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import java.time.LocalDate;
 
 @Entity
@@ -12,6 +14,10 @@ public class LockReport {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+
+  @ManyToOne
+  @JoinColumn(name = "report_id", nullable = false)
+  private Report report;
 
   private Card card;
   private LocalDate dataBloqueio;
@@ -68,5 +74,13 @@ public class LockReport {
 
   public void setTempoBloqueado(Long tempoBloqueado) {
     this.tempoBloqueado = tempoBloqueado;
+  }
+
+  public Report getReport() {
+    return report;
+  }
+
+  public void setReport(Report report) {
+    this.report = report;
   }
 }
