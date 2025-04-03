@@ -38,4 +38,8 @@ public class CardService {
 
 
   }
+
+  public Card findCardById(Long cardId) throws BoardNotFoundException {
+    return cardRepository.findById(cardId).orElseThrow(CardNotFoundException::new);
+  }
 }

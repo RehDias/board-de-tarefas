@@ -42,7 +42,7 @@ public class BoardService {
     return boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
   }
 
-  public void deleteBoard(Long id) {
+  public void deleteBoard(Long id) throws BoardNotFoundException {
     boardRepository.deleteById(id);
   }
 }
