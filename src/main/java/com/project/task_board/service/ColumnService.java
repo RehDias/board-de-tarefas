@@ -1,8 +1,12 @@
 package com.project.task_board.service;
 
+import com.project.task_board.entity.Board;
+import com.project.task_board.entity.Card;
 import com.project.task_board.entity.Column;
 import com.project.task_board.repository.ColumnRepository;
-import com.project.task_board.service.BoardService;
+import com.project.task_board.service.exceptions.BoardNotFoundException;
+import com.project.task_board.service.exceptions.CardNotFoundException;
+import com.project.task_board.service.exceptions.ColumnNotFoundException;
 import com.project.task_board.utils.ColumnType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +36,7 @@ public class ColumnService {
       int ordem) throws BoardNotFoundException, CardNotFoundException {
 
       Board board = boardService.findBoardById(boardId);
-      Card card = cardSer.findCardById(cardId);
+      Card card = cardService.findCardById(cardId);
 
       Column newColumn = new Column();
       newColumn.setBoard(board);

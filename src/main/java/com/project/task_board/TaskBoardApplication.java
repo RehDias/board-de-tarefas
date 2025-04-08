@@ -18,7 +18,11 @@ public class TaskBoardApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws InterruptedException, BoardNotFoundException {
-		menuSystem.start();
+		try {
+			menuSystem.start();
+		} catch (Exception e) {
+			System.err.println("Erro ao iniciar o sistema de menu: " + e.getMessage());
+		}
 	}
 
 }

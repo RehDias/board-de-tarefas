@@ -23,15 +23,18 @@ public class BoardService {
   public Board createNewBoard(String nome) {
     Board board = new Board();
     board.setNome(nome);
+    board.setColunas(criarColunasPadrao(board));
 
-    List<Column> columns = new ArrayList<>();
-    columns.add(new Column("To Do", ColumnType.INICIAL, 0));
-    columns.add(new Column("In Progress", ColumnType.PENDENTE, 1));
-    columns.add(new Column("Done", ColumnType.FINAL, 2));
-    columns.add(new Column("Cancelled", ColumnType.CANCELAMENTO, 3));
-
-    board.setColunas(columns);
     return boardRepository.save(board);
+  }
+
+  private List<Column> criarColunasPadrao(Board board) {
+    List<Column> columns = new ArrayList<>();
+    columns.add(new Column("To Do", ColumnType.INICIAL, 0, board));
+    columns.add(new Column("In Progress", ColumnType.PENDENTE, 1, board));
+    columns.add(new Column("Done", ColumnType.FINAL, 2, board));
+    columns.add(new Column("Cancelled", ColumnType.CANCELAMENTO, 3, board));
+    return columns;
   }
 
   public List<Board> listBoards() {
@@ -39,10 +42,15 @@ public class BoardService {
   }
 
   public Board findBoardById(Long id) throws BoardNotFoundException {
-    return boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
+    return boardRepository.findById(id)
+        .orElseThrow(BoardNotFoundException::new);
   }
 
   public void deleteBoard(Long id) throws BoardNotFoundException {
+    if (!boardRepository.existsById(id)) {
+      throw new BoardNotFoundException();
+    }
     boardRepository.deleteById(id);
   }
 }
+

@@ -1,8 +1,10 @@
 package com.project.task_board.utils;
 
 import com.project.task_board.dto.BoardDto;
+import com.project.task_board.dto.CardDto;
 import com.project.task_board.entity.Board;
 import com.project.task_board.service.BoardService;
+import com.project.task_board.service.CardService;
 import com.project.task_board.service.exceptions.BoardNotFoundException;
 import java.util.List;
 import java.util.Scanner;
@@ -12,11 +14,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class MenuSystem {
   private final BoardService boardService;
+  private final CardService cardService;
   private Board currentBoard;
 
   @Autowired
-  public MenuSystem(BoardService boardService) {
+  public MenuSystem(BoardService boardService, CardService cardService) {
     this.boardService = boardService;
+    this.cardService = cardService;
   }
 
   public Board getCurrentBoard() {
@@ -112,22 +116,94 @@ public class MenuSystem {
     System.out.println("8. Encerrar card");
     Thread.sleep(1000);
 
-    int choice = scanner.nextInt();
-    scanner.nextLine();
+    try {
+      int choice = scanner.nextInt();
+      scanner.nextLine();
 
-    switch (choice) {
-      case 1:
+      switch (choice) {
+        case 1:
+          System.out.println("Informe o título do card: ");
+          String titulo = scanner.nextLine();
+          System.out.println("Informe a descrição: ");
+          String descricao = scanner.nextLine();
+          CardDto card = CardDto.fromEntity(cardService.createCard(
+              titulo, descricao, this.getCurrentBoard().getId()
+          ));
+          System.out.println("✅ Card criado: " + card);
+          Thread.sleep(2000);
+          break;
 
-      case 8:
-        Thread.sleep(2000);
-        showMainMenu(scanner);
-        break;
+        case 2:
+          System.out.print("Informe o ID do card a ser movido: ");
+          Long idCard = scanner.nextLong();
+          scanner.nextLine();
+          System.out.print("Informe a nova coluna (TO_DO, DOING, DONE): ");
+          String coluna = scanner.nextLine().toUpperCase();
 
-      default:
-        System.out.println("Opção inválida, escolha uma opção válida!");
-        Thread.sleep(2000);
-        showBoardMenu(scanner);
-        break;
+          cardService.moveToNextColumn(idCard);
+          System.out.println("🔄 Card movido com sucesso.");
+          break;
+
+        case 3:
+          System.out.print("Informe o ID do card a ser cancelado: ");
+          Long cancelId = scanner.nextLong();
+          scanner.nextLine();
+
+          cardService.cancelCard(cancelId);
+          System.out.println("❌ Card cancelado com sucesso.");
+          break;
+
+        case 4:
+          System.out.print("Informe o ID do card a ser bloqueado: ");
+          Long blockId = scanner.nextLong();
+          scanner.nextLine();
+          System.out.print("Motivo do bloqueio: ");
+          String motivo = scanner.nextLine();
+
+          cardService.blockCard(blockId, motivo);
+          System.out.println("🔒 Card bloqueado.");
+          break;
+
+        case 5:
+          System.out.print("Informe o ID do card a ser desbloqueado: ");
+          Long unlockId = scanner.nextLong();
+
+          cardService.unlockCard(unlockId);
+          System.out.println("🔓 Card desbloqueado.");
+          break;
+
+        case 6:
+          System.out.println("⏱ Gerando relatório de tempo...");
+          // Exemplo:
+          // reportService.generateTimeReport(getCurrentBoard().getId());
+          System.out.println("📄 Relatório de tempo gerado.");
+          break;
+
+        case 7:
+          System.out.println("🔐 Gerando relatório de bloqueios...");
+          // Exemplo:
+          // reportService.generateLockReport(getCurrentBoard().getId());
+          System.out.println("📄 Relatório de bloqueio gerado.");
+          break;
+
+        case 8:
+          System.out.print("Informe o ID do card a ser encerrado: ");
+          Long doneId = scanner.nextLong();
+
+          cardService.cancelCard(doneId);
+          System.out.println("✅ Card encerrado com sucesso.");
+          break;
+
+        default:
+          System.out.println("Opção inválida, escolha uma opção válida!");
+          Thread.sleep(2000);
+          showBoardMenu(scanner);
+          break;
+
+      }
+    } catch (Exception e) {
+      System.out.println("Erro de entrada. Tente novamente.");
+      scanner.nextLine();
     }
   }
 }

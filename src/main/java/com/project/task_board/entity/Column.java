@@ -35,10 +35,11 @@ public class Column {
   public Column() {
   }
 
-  public Column(String nome, ColumnType tipo, int ordem) {
+  public Column(String nome, ColumnType tipo, int ordem, Board board) {
     this.nome = nome;
     this.tipo = tipo;
     this.ordem = ordem;
+    this.board = board;
   }
 
   public Long getId() {
